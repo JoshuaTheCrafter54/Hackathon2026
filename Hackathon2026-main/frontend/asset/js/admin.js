@@ -420,7 +420,7 @@ function filterEvents(status) {
 
 function createEvent(e) {
     e.preventDefault();
-    
+
     const newEvent = {
         id: 'event_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
         name: document.getElementById('eventName').value,
@@ -431,14 +431,21 @@ function createEvent(e) {
         status: 'active',
         createdAt: new Date().toISOString()
     };
-    
+
     events.push(newEvent);
     localStorage.setItem('events', JSON.stringify(events));
-    
+
+    loadAllData();
+    loadEventsTable();
+    loadScanAttendance();
+    updateDashboardStats();
+    initializeCharts();
+
     closeModal('createEventModal');
     e.target.reset();
-    loadEventsTable();
-    updateDashboardStats();
+
+    loadSection('events');
+
     showNotification('Event created successfully!', 'success');
 }
 
@@ -736,4 +743,13 @@ if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
         document.querySelector('.sidebar').classList.toggle('active');
     });
+
 }
+
+// Event Listener for Create Events
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('createEventForm');
+    if (form) {
+        form.addEventListener('submit', createEvent);
+    }
+});
